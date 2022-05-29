@@ -7,14 +7,14 @@ const props = defineProps(["message", "fromUser"]);
 const currentAnimation = ref("/src/assets/Ortusa_Idle2.gif");
 onMounted(() => {
     if (!props.fromUser && props.message.toLowerCase().includes("atvainojos,")) {
-        currentAnimation.value = "/src/assets/Ortusa_Sad.gif";
+        currentAnimation.value = new URL("../assets/Ortusa_Sad.gif", import.meta.url).href;
     } else {
-        currentAnimation.value = "/src/assets/Ortusa_Happy.gif";
+        currentAnimation.value = new URL("../assets/Ortusa_Happy.gif", import.meta.url).href;
 
     }
 })
 watch(messages.value, () => {
-    currentAnimation.value = "/src/assets/Ortusa_Idle2.gif";
+    currentAnimation.value = new URL("../assets/Ortusa_Idle2.gif", import.meta.url).href;
 })
 </script>
 <template>
