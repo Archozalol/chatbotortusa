@@ -3,18 +3,18 @@ import { ref } from "vue";
 import messages from "./components/messages.js";
 import Message from "./components/Message.vue";
 import TypingIndicator from "./components/TypingIndicator.vue";
-fetch("http://localhost:8000/restart");
+fetch("https://c0a3-109-110-25-85.eu.ngrok.io/restart");
 const message = ref("");
 const loadingMessage = ref(false);
 const currentCourse = ref("");
 const addingQuestion = ref(false);
-
+const trainCount = ref(300);
 const question = ref("")
 const answer = ref("")
 const password = ref("")
 
 async function getCurrentCourse() {
-  let ans = await fetch("http://localhost:8000/course");
+  let ans = await fetch("https://c0a3-109-110-25-85.eu.ngrok.io/course");
   currentCourse.value = await ans.json();
   return currentCourse.value;
 }
@@ -22,7 +22,7 @@ async function addQuestion() {
   addingQuestion.value = false;
   messages.value.push({ message: "Pievieno jautājumu, lūdzu uzgaidiet", fromUser: false });
   loadingMessage.value = true;
-  await fetch("http://localhost:8000/add", {
+  await fetch("https://c0a3-109-110-25-85.eu.ngrok.io/add", {
     method: "POST",
     headers: {
       'Accept': 'application/json',
@@ -42,7 +42,7 @@ async function addQuestion() {
 async function train(count = 200) {
   messages.value.push({ message: "Modeļa apmācība uzsākta, lūdzu uzgaidiet", fromUser: false });
   loadingMessage.value = true;
-  let ans = await fetch("http://localhost:8000/train?c=" + count);
+  let ans = await fetch("https://c0a3-109-110-25-85.eu.ngrok.io/train?c=" + count);
   let ansText = await ans.json();
   loadingMessage.value = false;
   messages.value.push({ message: ansText, fromUser: false });
@@ -55,7 +55,7 @@ async function sendMessage() {
   message.value = "";
   setTimeout(async () => {
     if (messageText) {
-      let ans = await fetch("http://localhost:8000/ask?q=" + messageText);
+      let ans = await fetch("https://c0a3-109-110-25-85.eu.ngrok.io/ask?q=" + messageText);
       let ansText = await ans.json();
       messages.value.push({ message: ansText, fromUser: false });
       getCurrentCourse();
@@ -106,7 +106,7 @@ function checkIfEnter(event) {
       <ul id="menu">
         <li>{{ currentCourse || "No course set" }}</li>
         <li @click="addingQuestion = !addingQuestion">Add question</li>
-        <li @click="train(250)">Train</li>
+        <li @click="train(trainCount)">Train <input type="number" v-model="trainCount" /></li>
       </ul>
     </div>
     <hr />
@@ -310,7 +310,7 @@ h1 {
 }
 
 
-#menuToggle input {
+#menuToggle input[type="checkbox"] {
   display: block;
   width: 40px;
   height: 32px;
